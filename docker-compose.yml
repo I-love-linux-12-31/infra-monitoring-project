@@ -1,0 +1,26 @@
+
+services:
+  api:
+    image: hashicorp/http-echo
+    command:
+      - "-text=Monitoring Service Active"
+      - "-listen=:8080"
+    expose:
+      - "8080"
+    networks:
+      - internal
+
+  proxy:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:Z
+    depends_on:
+      - api
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
